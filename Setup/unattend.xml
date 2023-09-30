@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-OutOfBoxExperience" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>
+        </component>
+        <component name="Microsoft-Windows-ServerManager-SvrMgrNc" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
+        <component name="Microsoft-Windows-TerminalServices-LocalSessionManager" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <fDenyTSConnections>false</fDenyTSConnections>
+        </component>
+        <component name="Networking-MPSSVC-Svc" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <FirewallGroups>
+                <FirewallGroup wcm:action="add" wcm:keyValue="RemoteDesktop">
+                    <Active>true</Active>
+                    <Group>@FirewallAPI.dll,-28752</Group>
+                    <Profile>all</Profile>
+                </FirewallGroup>
+            </FirewallGroups>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <TimeZone>Greenwich Standard Time</TimeZone>
+            <RegisteredOrganization>1Organization</RegisteredOrganization>
+            <RegisteredOwner>1Organization</RegisteredOwner>
+            <ComputerName>1Name</ComputerName>
+	    <ProductKey>YDFWN-MJ9JR-3DYRK-FXXRW-78VHK</ProductKey>
+        </component>
+        <component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Identification>
+                <JoinWorkgroup>WORKGROUP</JoinWorkgroup>
+            </Identification>
+        </component>
+        <component name="Microsoft-Windows-TCPIP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Interfaces>
+                <Interface wcm:action="add">
+                    <Ipv4Settings>
+                        <DhcpEnabled>1Dhcp</DhcpEnabled>
+                    </Ipv4Settings>
+                    <UnicastIpAddresses>
+                        <IpAddress wcm:action="add" wcm:keyValue="1">1Ip</IpAddress>
+                    </UnicastIpAddresses>
+                    <Identifier>1Mac</Identifier>
+                    <Routes>
+                        <Route wcm:action="add">
+                            <Identifier>1</Identifier>
+                            <Prefix>0.0.0.0/0</Prefix>
+                            <NextHopAddress>1DefaultGW</NextHopAddress>
+                        </Route>
+                    </Routes>
+                </Interface>
+            </Interfaces>
+        </component>
+        <component name="Microsoft-Windows-DNS-Client" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Interfaces>
+                <Interface>
+                    <Identifier>1Mac</Identifier>
+                    <EnableAdapterDomainNameRegistration>true</EnableAdapterDomainNameRegistration>
+                    <DisableDynamicUpdate>false</DisableDynamicUpdate>
+                    <DNSDomain>1Dnsdomain</DNSDomain>
+                    <DNSServerSearchOrder>
+                        <IpAddress wcm:action="add" wcm:keyValue="1">1DNSServer</IpAddress>
+                    </DNSServerSearchOrder>
+                </Interface>
+            </Interfaces>
+        </component>
+        <component name="Microsoft-Windows-Deployment" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <RunSynchronous>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <Description>Disable UAC for Users</Description>
+                    <Path>reg add &quot;HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot; /v &quot;EnableLUA&quot;  /t REG_DWORD /d 0 /f</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <Description>Set powershell execution policy</Description>
+                    <Path>powershell.exe -Command &quot;Set-ExecutionPolicy Unrestricted -Force&quot;</Path>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <Description>mkdir Scripts since Windows looks for SetupComplete.cmd in that directory. If the directory exists, it should be fine.</Description>
+                    <Path>cmd.exe /C mkdir %WINDIR%\Setup\Scripts</Path>
+                    <WillReboot>OnRequest</WillReboot>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <Description>If Setupcomplete.cmd already exists, copy it to a unique file.</Description>
+                    <Path>cmd /C if exist %WINDIR%\Setup\Scripts\SetupComplete.cmd (copy %WINDIR%\Setup\Scripts\SetupComplete.cmd %WINDIR%\Setup\Scripts\b0629158-0fc3-4655-808e-238d9f640407.cmd /y)</Path>
+                    <WillReboot>OnRequest</WillReboot>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>5</Order>
+                    <Description>Set the Write attribute of SetupComplete.cmd</Description>
+                    <Path>cmd /C if exist %WINDIR%\Setup\Scripts\SetupComplete.cmd (attrib -R %WINDIR%\Setup\Scripts\SetupComplete.cmd)</Path>
+                    <WillReboot>OnRequest</WillReboot>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>6</Order>
+                    <Description>If Setupcomplete.cmd already exists, Add New Line in SetupComplete.cmd</Description>
+                    <Path>cmd /C if exist %WINDIR%\Setup\Scripts\SetupComplete.cmd (echo. &gt;&gt; %WINDIR%\Setup\Scripts\SetupComplete.cmd)</Path>
+                    <WillReboot>OnRequest</WillReboot>
+                </RunSynchronousCommand>
+                <RunSynchronousCommand wcm:action="add">
+                    <Order>7</Order>
+                    <Description>Add Shutdown VM Command in SetupComplete.cmd</Description>
+                    <Path>cmd /C echo shutdown /s /f &gt;&gt; %WINDIR%\Setup\Scripts\SetupComplete.cmd</Path>
+                    <WillReboot>OnRequest</WillReboot>
+                </RunSynchronousCommand>
+            </RunSynchronous>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <InputLocale>1039:0000040f</InputLocale>
+            <SystemLocale>is-IS</SystemLocale>
+            <UILanguage>is-IS</UILanguage>
+            <UserLocale>is-IS</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideLocalAccountScreen>true</HideLocalAccountScreen>
+                <SkipMachineOOBE>false</SkipMachineOOBE>
+                <SkipUserOOBE>false</SkipUserOOBE>
+                <NetworkLocation>Work</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+            </OOBE>
+            <UserAccounts>
+               <AdministratorPassword>
+                    <Value>1AdminPassword</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>1AdminPassword</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Description>Local Administrator</Description>
+                        <DisplayName>1win10user</DisplayName>
+                        <Group>Administrators</Group>
+                        <Name>1win10user</Name>
+                    </LocalAccount>
+                </LocalAccounts>
+            </UserAccounts>
+            <AutoLogon>
+                <Enabled>false</Enabled>
+            </AutoLogon>
+        </component>
+    </settings>
+</unattend>
