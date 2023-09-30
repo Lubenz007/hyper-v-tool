@@ -8,9 +8,9 @@ Utilizing a standalone Hyper-V server and generating VMs from a golden image mig
 $mypath = Get-Location
 $global:StartupFolder = $mypath.Path
 
-# You can find the oscdimg.exe in the Windows 11 22h2 ADK: 
-# https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install 
-# Kit "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\arm64\Oscdimg"
+#You can find the oscdimg.exe in the Windows 11 22h2 ADK: 
+#https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install 
+#Kit "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\arm64\Oscdimg"
 $global:oscdimgPath = "$global:StartupFolder\tools\oscdimg.exe"
 
 #Template location
@@ -21,7 +21,7 @@ $global:2022core = "W2022C.vhdx"
 $global:2022stand = "W2022S_OS.vhdx"
 $global:2022data = "W2022D_OS.vhdx"
 $global:Ubuntu = "Ubuntu_OS.vhd"
-  
+
 ![image](https://github.com/Lubenz007/hyper-v-tool/assets/116028026/1e961bfd-aa70-41c3-96dd-6740f175d03b)
 ![image](https://github.com/Lubenz007/hyper-v-tool/assets/116028026/24f16f37-738a-4a17-a990-238896e9bcb3)
 ![image](https://github.com/Lubenz007/hyper-v-tool/assets/116028026/ac87298b-dd9d-4d1c-8d06-3db92c6105bf)
