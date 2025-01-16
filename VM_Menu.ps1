@@ -1,4 +1,5 @@
-﻿$host.ui.RawUI.WindowTitle = "Bensi Virtual Tool $PSScriptRoot "
+﻿#Benedikt Egilsson
+$host.ui.RawUI.WindowTitle = "Bensi Virtual Tool $PSScriptRoot "
 
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 

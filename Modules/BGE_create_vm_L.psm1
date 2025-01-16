@@ -38,7 +38,7 @@ function BGE_create_vm_L {
   
     )
     
-    #get the local path for virtual machines
+    #get the local path for virtual machines --
     $dPath = Get-VMHost | Select-Object VirtualMachinePath -ExpandProperty VirtualMachinePath
 
     #Where's the VM Default location? You can also specify it manually
